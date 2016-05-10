@@ -1,0 +1,15 @@
+web:
+    build: ./
+    ports:
+        - "8080:80"
+    volumes:
+        - ./:/var/www
+    links:
+        - database
+
+database:
+    image: timhaak/docker-mariadb-alpine
+    ports:
+        - "3306:3306"
+    volumes:
+        - ./storage/app/database:/data
