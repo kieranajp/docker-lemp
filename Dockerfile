@@ -1,4 +1,4 @@
-M ej52/alpine-nginx-php:latest
+FROM ej52/alpine-nginx-php:latest
 MAINTAINER Kieran Patel "https://kieranajp.co.uk"
 
 # Set docroot
