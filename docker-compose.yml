@@ -1,12 +1,14 @@
 web:
-    build: ./
+    build: .
     ports:
-        - "8080:80"
-    network_mode: 'bridge'
+        - '8000:80'
+    restart: unless-stopped
     volumes:
-        - ./:/var/www
-    links:
-        - database
+        - .:/var/www
+    depends_on:
+        - postgres
+        - redis
+    network_mode: 'bridge'
 
 postgres:
     image: kiasaki/alpine-postgres
