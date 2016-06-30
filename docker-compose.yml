@@ -2,14 +2,30 @@ web:
     build: ./
     ports:
         - "8080:80"
+    network_mode: 'bridge'
     volumes:
         - ./:/var/www
     links:
         - database
 
-database:
-    image: timhaak/docker-mariadb-alpine
+postgres:
+    image: kiasaki/alpine-postgres
     ports:
-        - "3306:3306"
+        - '5432:5432'
+    restart: unless-stopped
     volumes:
-        - ./storage/app/database:/data
+        - ./storage/postgres:/data
+    network_mode: 'bridge'
+    environment:
+        POSTGRES_USER: docker
+        POSTGRES_PASSWORD: docker
+        POSTGRES_DB: docker
+
+redis:
+    image: smebberson/alpine-redis
+    ports:
+        - '6379:6379'
+    restart: unless-stopped
+    volumes:
+        - ./storage/redis:/data
+    network_mode: 'bridge'
