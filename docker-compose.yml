@@ -1,14 +1,24 @@
+reverse_proxy:
+    image: ej52/alpine-nginx-proxy
+    ports:
+        - '80:80'
+        - '443:443'
+    restart: unless-stopped
+    volumes:
+        - '/var/run/docker.sock:/tmp/docker.sock:ro'
+
 web:
     build: .
     ports:
         - '8000:80'
     restart: unless-stopped
     volumes:
-        - .:/var/www
-    depends_on:
+        - .:/server/http
+    links:
         - postgres
         - redis
-    network_mode: 'bridge'
+    environment:
+        VIRTUAL_HOST: samsara.docker
 
 postgres:
     image: kiasaki/alpine-postgres
@@ -16,12 +26,11 @@ postgres:
         - '5432:5432'
     restart: unless-stopped
     volumes:
-        - ./storage/postgres:/data
-    network_mode: 'bridge'
+        - ./storage/app/database:/data
     environment:
-        POSTGRES_USER: docker
-        POSTGRES_PASSWORD: docker
-        POSTGRES_DB: docker
+        POSTGRES_USER: samsara
+        POSTGRES_PASSWORD: arasmas
+        POSTGRES_DB: samsara
 
 redis:
     image: smebberson/alpine-redis
@@ -29,5 +38,4 @@ redis:
         - '6379:6379'
     restart: unless-stopped
     volumes:
-        - ./storage/redis:/data
-    network_mode: 'bridge'
+        - ./storage/app/redis:/data
